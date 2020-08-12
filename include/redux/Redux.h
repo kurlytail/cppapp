@@ -14,9 +14,11 @@
 
 namespace bst::redux {
 
-template <typename State> class Store {
+template <typename State = std::any, typename ActionType = std::any>
+class Store {
   public:
-    using Reducer = std::function<State(const State &, const Action &)>;
+    using Reducer =
+        std::function<State(const State &, const Action<ActionType> &)>;
 
   private:
     State state;
@@ -26,7 +28,7 @@ template <typename State> class Store {
     void setState(const State &newState) { state = newState; }
     const State getState() const { return state; }
 
-    void dispatch(const Action &action)
+    void dispatch(const Action<ActionType> &action)
     {
         const auto newState = reducer(getState(), action);
         setState(newState);
@@ -35,23 +37,22 @@ template <typename State> class Store {
     Store(const State &s, const Reducer &a) : state(s), reducer(a) { ; }
 };
 
-template <typename State>
+template <typename State = std::any, typename ActionType = std::any>
 auto createStore(const State &init,
-                 const typename Store<State>::Reducer &reducer)
+                 const typename Store<State, ActionType>::Reducer &reducer)
 {
-    class Store<State> store(init, reducer);
+    class Store<State, ActionType> store(init, reducer);
     return store;
 }
 
-template <typename State>
+template <typename State = std::any, typename ActionType = std::any>
 auto combineReducers(
-    const std::map<std::string,
-                   std::function<typename State::mapped_type(
-                       const typename State::mapped_type &, const Action &)>>
-        &&reducers)
+    const std::map<std::string, std::function<typename State::mapped_type(
+                                    const typename State::mapped_type &,
+                                    const Action<ActionType> &)>> &&reducers)
 {
     return [reducers = std::move(reducers)](const State &state,
-                                            const Action &action) {
+                                            const Action<ActionType> &action) {
         State newState;
         bool changed = false;
 

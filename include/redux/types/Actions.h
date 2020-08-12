@@ -9,14 +9,18 @@
 
 namespace bst::redux {
 
-using Action = std::any;
+template <typename T = std::any> struct Action {
+    T type;
+    Action(T t) : type(t) { ; }
+};
 
-class AnyAction : public std::any,
+template <typename T>
+class AnyAction : public Action<T>,
                   public std::unordered_map<std::string, std::any> {
 };
 
-template <typename A, typename P> class ActionCreator {
-    A operator()(std::initializer_list<P>);
+template <typename A, typename P = std::vector<std::any>> class ActionCreator {
+    A operator()(std::initializer_list<typename P::value_type>);
 };
 
 template <typename A, typename P>

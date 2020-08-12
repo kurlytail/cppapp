@@ -9,25 +9,28 @@ using namespace bst::redux;
 
 TEST(ReduxStoreTest, ReduxStoreLifecycle)
 {
-    auto store = createStore<int>(
-        0, [](int oldState, const std::any action) { return 0; });
+    auto store = createStore<int, int>(
+        0, [](int oldState, const Action<int> action) { return 0; });
 }
 
 TEST(ReduxStoreTest, ReduxStoreDispatch)
 {
-    auto store = createStore<int>(
-        0, [](int oldState, const std::any action) { return 0xfeef; });
-    store.dispatch(0);
+    auto store = createStore<int, int>(
+        0, [](int oldState, const Action<int> action) { return 0xfeef; });
+    store.dispatch(Action(0));
     EXPECT_EQ(0xfeef, store.getState());
 }
 
 TEST(ReduxStoreTest, ReduxStoreDispatchClass)
 {
     struct Application {
-        int operator()(int oldState, const std::any action) { return 0xfeef; }
+        int operator()(int oldState, const Action<int> action)
+        {
+            return 0xfeef;
+        }
     };
 
-    auto store = createStore<int>(0, Application());
+    auto store = createStore<int, int>(0, Application());
     store.dispatch(0);
     EXPECT_EQ(0xfeef, store.getState());
 }
@@ -35,14 +38,14 @@ TEST(ReduxStoreTest, ReduxStoreDispatchClass)
 TEST(ReduxStoreTest, CombineReducers)
 {
     using State = std::unordered_map<std::string, int>;
-    auto application = combineReducers<State>({
+    auto application = combineReducers<State, int>({
         {"return_1",
-         [](const int &oldState, const std::any action) { return 1; }},
+         [](const int &oldState, const Action<int> action) { return 1; }},
         {"return_2",
-         [](const int &oldState, const std::any action) { return 2; }},
+         [](const int &oldState, const Action<int> action) { return 2; }},
     });
 
-    auto store = createStore<State>({}, application);
+    auto store = createStore<State, int>({}, application);
     store.dispatch(0);
     EXPECT_EQ(store.getState().at("return_1"), 1);
     EXPECT_EQ(store.getState().at("return_2"), 2);
