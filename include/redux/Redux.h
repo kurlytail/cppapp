@@ -10,9 +10,11 @@
 #include <type_traits>
 #include <utility>
 
+#include "types/Reducers.h"
+
 namespace bst::redux {
 
-template <typename State, typename Action> class Store {
+template <typename State> class Store {
   public:
     using Reducer = std::function<State(const State &, const Action &)>;
 
@@ -33,15 +35,15 @@ template <typename State, typename Action> class Store {
     Store(const State &s, const Reducer &a) : state(s), reducer(a) { ; }
 };
 
-template <typename State, typename Action>
+template <typename State>
 auto createStore(const State &init,
-                 const typename Store<State, Action>::Reducer &reducer)
+                 const typename Store<State>::Reducer &reducer)
 {
-    class Store<State, Action> store(init, reducer);
+    class Store<State> store(init, reducer);
     return store;
 }
 
-template <typename State, typename Action>
+template <typename State>
 auto combineReducers(
     const std::map<std::string,
                    std::function<typename State::mapped_type(
