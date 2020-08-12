@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0/tr1",
+                "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0",
+                "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0/x86_64-apple-darwin18.0.0",
+                "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1",
+                "/usr/local/include/v1",
+                "/usr/local/Cellar/qt/5.15.0/lib/QtWidgets.framework/Headers",
+                "/usr/local/Cellar/qt/5.15.0/lib/QtGui.framework/Headers",
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
+                "/usr/local/Cellar/qt/5.15.0/lib/QtCore.framework/Headers"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c99",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64",
+            "configurationProvider": "vector-of-bool.cmake-tools"
+        }
+    ],
+    "version": 4
+}
