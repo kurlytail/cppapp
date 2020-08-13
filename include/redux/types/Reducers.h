@@ -1,7 +1,5 @@
 
-
-#ifndef __BST_REDUX_TYPES_REDUCERS_H__
-#define __BST_REDUX_TYPES_REDUCERS_H__
+#pragma once
 
 #include <any>
 #include <type_traits>
@@ -20,5 +18,3 @@ class Reducer {
 };
 
 } // namespace bst::redux
-
-#endif

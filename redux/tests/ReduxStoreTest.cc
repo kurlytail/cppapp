@@ -17,7 +17,7 @@ TEST(ReduxStoreTest, ReduxStoreDispatch)
 {
     auto store = createStore<int, int>(
         0, [](int oldState, const Action<int> action) { return 0xfeef; });
-    store.dispatch(Action(0));
+    store.dispatch(0);
     EXPECT_EQ(0xfeef, store.getState());
 }
 

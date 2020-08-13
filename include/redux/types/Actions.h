@@ -1,7 +1,5 @@
 
-
-#ifndef __BST_REDUX_TYPES_ACTIONS_H__
-#define __BST_REDUX_TYPES_ACTIONS_H__
+#pragma once
 
 #include <any>
 #include <string>
@@ -15,8 +13,9 @@ template <typename T = std::any> struct Action {
 };
 
 template <typename T>
-class AnyAction : public Action<T>,
-                  public std::unordered_map<std::string, std::any> {
+struct AnyAction : public Action<T>,
+                   public std::unordered_map<std::string, std::any> {
+    AnyAction(T t) : Action<T>(t) { ; }
 };
 
 template <typename A, typename P = std::vector<std::any>> class ActionCreator {
@@ -29,5 +28,3 @@ class ActionCreatorMapsObject
 };
 
 } // namespace bst::redux
-
-#endif
