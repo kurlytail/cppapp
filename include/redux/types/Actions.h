@@ -7,12 +7,15 @@
 
 namespace bst::redux {
 
-template <typename T = std::any> struct Action {
+struct ActionBase {
+};
+
+template <typename T = std::any> struct Action : public ActionBase {
     T type;
     Action(T t) : type(t) { ; }
 };
 
-template <typename T>
+template <typename T = std::any>
 struct AnyAction : public Action<T>,
                    public std::unordered_map<std::string, std::any> {
     AnyAction(T t) : Action<T>(t) { ; }

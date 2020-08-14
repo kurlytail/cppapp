@@ -4,33 +4,63 @@
 #include <any>
 #include <functional>
 #include <type_traits>
+#include <variant>
 
 #include "Actions.h"
+#include "Exceptions.h"
+#include "Reducers.h"
 
 namespace bst::redux {
 
-template <typename S, typename T = std::any, typename A = AnyAction<T>,
+template <typename S, typename A = AnyAction<>,
           typename std::enable_if<
-              std::is_convertible<A, Action<T>>::value>::type * = nullptr>
-class Store {
-  public:
-    using Reducer = std::function<S(const S &, const A &)>;
+              std::is_convertible<A, ActionBase>::value>::type * = nullptr>
+struct Store {
 
-  private:
-    S state;
-    Reducer reducer;
+    Reducer<S, A> currentReducer;
+    S currentState;
+    bool isDispatching = false;
 
-  public:
-    void setState(const S &newState) { state = newState; }
-    const S getState() const { return state; }
-
-    void dispatch(const A &action)
+    S getState()
     {
-        const auto newState = reducer(getState(), action);
-        setState(newState);
-    };
+        if (isDispatching) {
+            throw exception("You may not call store.getState() while the "
+                            "reducer is executing. "
+                            "The reducer has already received the state as "
+                            "an argument. "
+                            "Pass it down from the top reducer instead of "
+                            "reading it from the store.");
+        }
 
-    Store(const S &s, const Reducer &a) : state(s), reducer(a) { ; }
+        return currentState;
+    }
+
+    template <typename D,
+              typename std::enable_if<std::is_convertible<D, A>::value &&
+                                      std::is_trivial<D>::value &&
+                                      std::is_standard_layout<D>::value>::type
+                  * = nullptr>
+    D dispatch(D action)
+    {
+        if (isDispatching) {
+            throw exception("Reducers may not dispatch actions.");
+        }
+
+        try {
+            isDispatching = true;
+            currentState = currentReducer(currentState, action);
+        }
+        catch (std::exception ex) {
+            isDispatching = false;
+            throw ex;
+        }
+
+        isDispatching = false;
+
+        return action;
+    }
+
+    Store(Reducer<S, A> reducer) : currentReducer(reducer) { ; }
 };
 
 } // namespace bst::redux

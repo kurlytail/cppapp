@@ -2,19 +2,16 @@
 #pragma once
 
 #include <any>
+#include <functional>
 #include <type_traits>
 
 #include "Actions.h"
 
 namespace bst::redux {
 
-template <
-    typename S = std::any, typename T = std::any, typename A = AnyAction<T>,
-    typename std::enable_if<std::is_convertible<A, Action<T>>::value>::type * =
-        nullptr>
-class Reducer {
-  public:
-    S operator()(S state, A action) { return S(); }
-};
+template <typename S = std::any, typename A = AnyAction<>,
+          typename std::enable_if<
+              std::is_convertible<A, ActionBase>::value>::type * = nullptr>
+using Reducer = std::function<S(S, A)>;
 
 } // namespace bst::redux

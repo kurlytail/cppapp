@@ -13,14 +13,9 @@
 #include "types/Reducers.h"
 #include "types/Store.h"
 
-namespace bst::redux {
+#include "CreateStore.h"
 
-template <typename S = std::any, typename T = std::any>
-auto createStore(const S &init, const typename Store<S, T>::Reducer &reducer)
-{
-    class Store<S, T> store(init, reducer);
-    return store;
-}
+namespace bst::redux {
 
 template <typename S = std::any, typename T = std::any>
 auto combineReducers(
