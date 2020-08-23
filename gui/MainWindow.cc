@@ -19,11 +19,15 @@ class MyFrame : public wxFrame {
 
 enum { ID_Hello = 1 };
 
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_MENU(ID_Hello, MyFrame::OnHello)
-    EVT_MENU(wxID_EXIT, MyFrame::OnExit) EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-        wxEND_EVENT_TABLE()
+// clang-format off
+wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
+    EVT_MENU(ID_Hello, MyFrame::OnHello)
+    EVT_MENU(wxID_EXIT, MyFrame::OnExit)
+    EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
+wxEND_EVENT_TABLE()
 
-            wxIMPLEMENT_APP(MyApp);
+wxIMPLEMENT_APP(MyApp);
+// clang-format on
 
 bool MyApp::OnInit()
 {
